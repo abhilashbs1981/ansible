@@ -1,0 +1,5 @@
+- name: Uninstall "{{ deploy_name }}"  Chart by Subtask
+  kubernetes.core.helm:
+    name: "{{ deploy_name }}"
+    namespace: "{{ deploy_namespace }}"
+    state: absent

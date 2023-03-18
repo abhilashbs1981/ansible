@@ -1,0 +1,45 @@
+- hosts: localhost
+  connection: local
+  vars:
+    helm_chart_url: "https://charts.bitnami.com/bitnami"
+    service_name: "apache-server"
+  tasks:
+    - name: Add Helm repo
+      kubernetes.core.helm_repository:
+        name: bitnami
+        repo_url: "{{ helm_chart_url }}"
+    - name: Install Nginx Chart
+      include_tasks: tasks/subtask.yml       
+      vars:
+        deploy_name: "nginx-server"     
+        deploy_namespace: "abhilash"               
+        create_namespace: true
+        chart_ref: "bitnami/nginx"
+        replicas: 2
+    - name: Deploy Busbox to Kubernetes using Kubectl 
+      kubernetes.core.k8s:
+        src: "{{ item }}"
+        state: present      
+      with_items:
+        - k8-yamls/busy.yaml
+        - k8-yamls/busy1.yaml  
+    - name: Install Apache chart
+      include_tasks: tasks/subtask.yml
+      vars:
+        deploy_name: "apache-server"
+        deploy_namespace: "default"
+        create_namespace: true
+        chart_ref: "bitnami/apache"
+        replicas: 2
+      register: helm_output
+    - name: Retrieve service IP for Apache
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Service
+        name: "{{ service_name }}"
+        namespace: default
+      register: web_service   
+    - name: Print service URL for Apache
+      debug:
+        msg: "http://{{ web_service.resources[0].spec.clusterIP }}:80"
+

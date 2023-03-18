@@ -1,0 +1,23 @@
+- hosts: localhost
+  connection: local
+  vars:
+    service_name: "apache-server"
+  tasks:
+    - name: Uninstall Nginx Chart
+      include_tasks: tasks/undeploysubtask.yml
+      vars:
+        deploy_name: "nginx-server"     
+        deploy_namespace: "abhilash"               
+    - name: Remove Busybox to Kubernetes using Kubectl 
+      kubernetes.core.k8s:
+        src: "{{ item }}"
+        state: absent       
+      with_items:
+        - k8-yamls/busy.yaml
+        - k8-yamls/busy1.yaml  
+    - name: Uninstall Apache chart
+      include_tasks: tasks/undeploysubtask.yml
+      vars:
+        deploy_name: "apache-server"
+        deploy_namespace: "default"
+

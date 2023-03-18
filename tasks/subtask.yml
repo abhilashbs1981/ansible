@@ -1,0 +1,9 @@
+- name: Install "{{ deploy_name }}"  Chart by Subtask
+  kubernetes.core.helm:
+    name: "{{ deploy_name }}"
+    namespace: "{{ deploy_namespace }}"
+    create_namespace: "{{ create_namespace }}"
+    chart_ref: "{{ chart_ref }}"
+    state: present
+    values:
+      replicaCount: "{{ replicas }}"
