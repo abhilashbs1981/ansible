@@ -1,0 +1,7 @@
+- name: Deploy Busybox to Kubernetes using Kubectl 
+  kubernetes.core.k8s:
+    src: "{{ item }}"
+    state: present
+  with_items:
+    - /home/abhilash/abhi/ansible/k8-yamls/busy.yaml
+    - /home/abhilash/abhi/ansible/k8-yamls/busy1.yaml  

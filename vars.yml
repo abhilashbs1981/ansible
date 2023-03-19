@@ -1,0 +1,12 @@
+helm_chart_url: "https://charts.bitnami.com/bitnami"
+nginx_deploy_name: "nginx-server"
+nginx_deploy_namespace: "abhilash"
+nginx_chart_ref: "bitnami/nginx"
+nginx_create_namespace: true
+nginx_replicas: 2
+apache_service_name: "apache-server"
+apache_deploy_name: "apache-server"
+apache_deploy_namespace: "default"
+apache_chart_ref: "bitnami/apache"
+apache_create_namespace: true
+apache_replicas: 2

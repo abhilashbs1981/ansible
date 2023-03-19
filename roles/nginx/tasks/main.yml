@@ -1,0 +1,10 @@
+- name: Install Nginx Chart
+  kubernetes.core.helm:
+    name: "{{ nginx_deploy_name }}"
+    chart_ref: "{{ nginx_chart_ref }}"
+    namespace: "{{ nginx_deploy_namespace }}"
+    create_namespace: "{{ nginx_create_namespace }}"
+    state: present
+    values:
+      replicas: "{{ nginx_replicas }}"
+

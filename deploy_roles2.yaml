@@ -1,0 +1,13 @@
+---
+- name: Deploy Nginx and Apache charts using Helm and Kubectl
+  hosts: localhost
+  connection: local
+  vars_files:
+    - vars.yml
+  vars:
+    service_name: "apache-server"
+  roles:
+    - helmrepo
+    - busybox      
+    - nginx
+    - apache

@@ -1,0 +1,21 @@
+- name: Install Apache Chart
+  kubernetes.core.helm:
+    name: "{{ apache_deploy_name }}"
+    chart_ref: "{{ apache_chart_ref }}"
+    namespace: "{{ apache_deploy_namespace }}"
+    create_namespace: "{{ apache_create_namespace }}"
+    state: present
+    values:
+      replicas: "{{ apache_replicas }}"
+  register: helm_output
+- name: Retrieve service IP for Apache
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Service
+    name: "{{ apache_service_name }}"
+    namespace: default
+  register: web_service
+- name: Print service URL for Apache
+  debug:
+    msg: "http://{{ web_service.resources[0].spec.clusterIP }}:80"
+  

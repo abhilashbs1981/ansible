@@ -1,0 +1,4 @@
+- name: Add Helm repo
+  kubernetes.core.helm_repository:
+    name: bitnami
+    repo_url: "{{ helm_chart_url }}"
