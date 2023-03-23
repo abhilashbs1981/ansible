@@ -19,7 +19,7 @@
           replicaCount: 2
     - name: Deploy Busbox to Kubernetes using Kubectl 
       kubernetes.core.k8s:
-        src: /home/abhilash/abhi/ansible/busy.yaml
+        src: /home/abhilash/abhi/ansible/k8-yamls/busy.yaml
         state: present      
     - name: Install Apache chart
       kubernetes.core.helm:

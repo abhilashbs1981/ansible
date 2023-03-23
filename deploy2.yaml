@@ -21,8 +21,8 @@
         src: "{{ item }}"
         state: present      
       with_items:
-        - k8-yamls/busy.yaml
-        - k8-yamls/busy1.yaml  
+        - /home/abhilash/abhi/ansible/k8-yamls/busy.yaml
+        - /home/abhilash/abhi/ansible/k8-yamls/busy1.yaml  
     - name: Install Apache chart
       include_tasks: tasks/subtask.yml
       vars:
