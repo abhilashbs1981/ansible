@@ -537,6 +537,7 @@ postgresql:
   ##
   extendedConf: |-
     logging_collector = on 
+    log_directory = '/bitnami/postgresql/logs'
     log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'
     log_connections = on
     log_disconnections = on
