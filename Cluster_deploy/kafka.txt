@@ -37,13 +37,17 @@ helm install kafka . --set persistence.size=2Gi,logPersistence.size=2Gi,volumePe
 
 Kafka Topic creation
 kafka-topics.sh --create --topic test1 --bootstrap-server kafka.default.svc.cluster.local:9092
+kafka-topics.sh --create --topic test2 --bootstrap-server kafka.default.svc.cluster.local:9092
+kafka-topics.sh --create --topic test3 --bootstrap-server kafka.default.svc.cluster.local:9092
+
 
 Kafka verify the cluster using producer and consumer
 	Kafka Add mesgs to the topic 
 	kafka-console-producer.sh --broker-list kafka-0.kafka-headless.default.svc.cluster.local:9092  --topic test1
 	Kafka Check and verify the msgs 
 	kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test1 --from-beginning
-      Kafka to delete msgs from the topic 
+
+Kafka to delete msgs from the topic 
  
 cat > offsetfile.json << EOF
 {"partitions": [{"topic": "test1", "partition": 0, "offset": 3461}], "version":1 }
@@ -51,6 +55,19 @@ EOF
 
 kafka-delete-records.sh --bootstrap-server localhost:9092 --offset-json-file ./offsetfile.json
 
+Kafka to count the number of msgs in topic 
+
+kafka-run-class.sh kafka.tools.GetOffsetShell \
+  --broker-list localhost:9092 \
+  --topic test1 
+
+kafka-run-class.sh kafka.tools.GetOffsetShell \
+  --broker-list kafka-0.kafka-headless.default.svc.cluster.local:9092 \
+  --topic test2 \
+  | awk -F  ":" '{sum += $3} END {print sum}'
+
+
+ 
 
 
 kubectl taint node master node-role.kubernetes.io/master:NoSchedule
@@ -60,7 +77,4 @@ kubectl taint node master node-role.kubernetes.io/master:NoSchedule-
 
 
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups -describe
-kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group  console-consumer-36227  --describe
-kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group --reset-offsets --to-earliest --all-topics --execute
-
-kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group console-consumer-36227 --describe
+ 
