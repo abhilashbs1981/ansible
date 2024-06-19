@@ -1,0 +1,66 @@
+http://elastic-elasticsearch:9200
+
+https://github.com/quickbooks2018/kafka-bitnami
+
+helm pull bitnami/kafka --version 23.0.7
+
+image:
+  debug: true
+replicaCount: 3
+tolerations:
+   - key: "node-role.kubernetes.io/control-plane"
+     operator: "Equal"
+     value: ""
+     effect: "NoSchedule"
+externalAccess:
+  enabled: false
+  autoDiscovery:
+    enabled: true
+kraft:
+  enabled: false
+extraEnvVars:
+  - name: KAFKA_ENABLE_KRAFT
+    value: "false"
+  - name: KAFKA_CFG_DELETE_TOPIC_ENABLE
+    value: "true"  # Add this line to enable topic deletion
+  - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
+    value: "true"  # Add this line to enable topic auto-creation
+zookeeper:
+  enabled: true
+  replicaCount: 3
+  persistence:
+    enabled: true
+    size: 2Gi
+
+
+helm install kafka . --set persistence.size=2Gi,logPersistence.size=2Gi,volumePermissions.enabled=true,persistence.enabled=true,logPersistence.enabled=true,serviceAccount.create=true,rbac.create=true  -f  values.yaml
+
+Kafka Topic creation
+kafka-topics.sh --create --topic test1 --bootstrap-server kafka.default.svc.cluster.local:9092
+
+Kafka verify the cluster using producer and consumer
+	Kafka Add mesgs to the topic 
+	kafka-console-producer.sh --broker-list kafka-0.kafka-headless.default.svc.cluster.local:9092  --topic test1
+	Kafka Check and verify the msgs 
+	kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test1 --from-beginning
+      Kafka to delete msgs from the topic 
+ 
+cat > offsetfile.json << EOF
+{"partitions": [{"topic": "test1", "partition": 0, "offset": 3461}], "version":1 }
+EOF
+
+kafka-delete-records.sh --bootstrap-server localhost:9092 --offset-json-file ./offsetfile.json
+
+
+
+kubectl taint node master node-role.kubernetes.io/master:NoSchedule
+kubectl taint node master node-role.kubernetes.io/master:NoSchedule-
+
+
+
+
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups -describe
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group  console-consumer-36227  --describe
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group --reset-offsets --to-earliest --all-topics --execute
+
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group console-consumer-36227 --describe
