@@ -33,11 +33,11 @@ global:
   defaultStorageClass: ""
   storageClass: ""
   postgresql:
-    username: ""
-    password: ""
+    username: "postgres"
+    password: "password"
     database: ""
     repmgrUsername: ""
-    repmgrPassword: ""
+    repmgrPassword: "cGFzc3dvcmQ"
     repmgrDatabase: ""
     existingSecret: ""
   ldap:
@@ -469,7 +469,7 @@ postgresql:
   ## @param postgresql.postgresPassword PostgreSQL password for the `postgres` user when `username` is not `postgres`
   ## ref: https://github.com/bitnami/containers/tree/main/bitnami/postgresql#creating-a-database-user-on-first-run (see note!)
   ##
-  postgresPassword: ""
+  postgresPassword: "VXA1OThnc1c0"
   ## @param postgresql.usePasswordFile Set to `true` to mount PostgreSQL secret as a file instead of passing environment variable
   ##
   usePasswordFile: ""
