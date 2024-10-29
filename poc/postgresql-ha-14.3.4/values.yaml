@@ -2043,7 +2043,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size Persistent Volume Claim size
   ##
-  size: 8Gi
+  size: 1Gi
   ## @param persistence.annotations Persistent Volume Claim annotations
   ##
   annotations: {}
